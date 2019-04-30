@@ -1,35 +1,27 @@
 //package firstgui;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class Interface extends Application {
-	private TableView table = new TableView();
-	Scene scene1, scene2;
-	
-	final ObservableList<Drug> dData = FXCollections
-			.observableArrayList(new Drug("1234", "Crack", "Big5", "List", "List1"));
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
+public class Interface extends Application {
+	private TableView<Drug> table;
+	Scene scene1, scene2;
+
+	private ObservableList<Drug> data;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -106,25 +98,14 @@ public class Interface extends Application {
 			System.out.println(skuField.getText() + " " + nameField.getText() + " " + supplyField.getText());
 			primaryStage.setScene(scene1);
 		});
-		TableColumn Psku = new TableColumn("Product SKU");
-		//Psku.setCellValueFactory(
-		//		new PropertyValueFactory <Drug, String>("sku"));
-		
-		TableColumn Pname = new TableColumn("Product Name");
-		TableColumn Psupply = new TableColumn("Supplier");
-		TableColumn list = new TableColumn("List");
-		TableColumn list2 = new TableColumn("One More List");
 
-		Psku.prefWidthProperty().bind(table.widthProperty().multiply(.2));
-		Pname.prefWidthProperty().bind(table.widthProperty().multiply(.2));
-		Psupply.prefWidthProperty().bind(table.widthProperty().multiply(.2));
-		list.prefWidthProperty().bind(table.widthProperty().multiply(.2));
-		list2.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		try {
+			data = JSONparser.parse(new FileInputStream(new File("src/testJSON.json")));
+		} catch (FileNotFoundException e){
+			e.printStackTrace();
+		}
 
-		// Add data to list
-
-		table.setItems(dData);
-		table.getColumns().addAll(Psku, Pname, Psupply, list, list2);
+		table = createTable();
 
 		VBox vbox2 = new VBox(10, hbox, lookupGrid, lookup, table);
 		vbox2.setPadding(new Insets(10));
@@ -141,20 +122,42 @@ public class Interface extends Application {
 		launch(args);
 	}
 
-	public static class Drug {
-		private final SimpleStringProperty sku;
-		private final SimpleStringProperty name;
-		private final SimpleStringProperty supplier;
-		private final SimpleStringProperty list;
-		private final SimpleStringProperty list2;
+	public TableView<Drug> createTable(){
+		TableView<Drug> table = new TableView();
+		table.setItems(data);
 
-		private Drug(String sku, String name, String supplier, String list, String list2) {
-			this.sku = new SimpleStringProperty(sku);
-			this.name = new SimpleStringProperty(name);
-			this.supplier = new SimpleStringProperty(supplier);
-			this.list = new SimpleStringProperty(list);
-			this.list2 = new SimpleStringProperty(list2);
-		}
+		TableColumn<Drug, String> Pid = new TableColumn<>("Product ID");
+		TableColumn<Drug, String> Pname = new TableColumn<>("Product Name");
+		TableColumn<Drug, String> Powner = new TableColumn<>("Owner");
+		TableColumn<Drug, String> PprevOwner = new TableColumn<>("Previous Owner");
+		TableColumn<Drug, String> Pquantity = new TableColumn<>("Quantity");
+		TableColumn<Drug, String> PpricePerUnit = new TableColumn<>("Price Per Unit");
+		TableColumn<Drug, String> PtotalPrice = new TableColumn<>("Total Price");
+
+		Pid.setCellValueFactory(new PropertyValueFactory<>("productID"));
+		Pname.setCellValueFactory(new PropertyValueFactory<>("productName"));
+		Powner.setCellValueFactory(new PropertyValueFactory<>("owner"));
+		PprevOwner.setCellValueFactory(new PropertyValueFactory<>("previousOwner"));
+		Pquantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+		PpricePerUnit.setCellValueFactory(new PropertyValueFactory<>("pricePerUnit"));
+		PtotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+
+		Pid.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		Pname.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		Powner.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		PprevOwner.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		Pquantity.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		PpricePerUnit.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		PtotalPrice.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+
+		table.getColumns().add(Pid);
+		table.getColumns().add(Pname);
+		table.getColumns().add(Powner);
+		table.getColumns().add(PprevOwner);
+		table.getColumns().add(Pquantity);
+		table.getColumns().add(PpricePerUnit);
+		table.getColumns().add(PtotalPrice);
+
+		return table;
 	}
-
 }
