@@ -13,9 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.BufferedInputStream;
 
 public class Interface extends Application {
 	private TableView<Drug> table;
@@ -68,6 +66,10 @@ public class Interface extends Application {
 				"I honestly dont know what other blockchains are being used");
 
 		Button apply = new Button("apply");
+		apply.setOnAction(e ->{
+			table.setItems(data); // add data to the table
+		});
+
 		Button Nlookup = new Button("New Lookup");
 
 		final ComboBox comboBox = new ComboBox(options);
@@ -99,12 +101,7 @@ public class Interface extends Application {
 			primaryStage.setScene(scene1);
 		});
 
-		try {
-			data = JSONparser.parse(new FileInputStream(new File("src/testJSON.json")));
-		} catch (FileNotFoundException e){
-			e.printStackTrace();
-		}
-
+		data = JSONparser.parse(new BufferedInputStream(API_Calls.getInputStream("https://blockchain-restful-api.herokuapp.com/api/query")));
 		table = createTable();
 
 		VBox vbox2 = new VBox(10, hbox, lookupGrid, lookup, table);
@@ -122,10 +119,12 @@ public class Interface extends Application {
 		launch(args);
 	}
 
+	// method: createTable
+	// purpose: create and populate tableView
 	public TableView<Drug> createTable(){
-		TableView<Drug> table = new TableView();
-		table.setItems(data);
+		TableView<Drug> table = new TableView<>();
 
+		// create and link columns to Drug fields
 		TableColumn<Drug, String> Pid = new TableColumn<>("Product ID");
 		TableColumn<Drug, String> Pname = new TableColumn<>("Product Name");
 		TableColumn<Drug, String> Powner = new TableColumn<>("Owner");
@@ -134,6 +133,7 @@ public class Interface extends Application {
 		TableColumn<Drug, String> PpricePerUnit = new TableColumn<>("Price Per Unit");
 		TableColumn<Drug, String> PtotalPrice = new TableColumn<>("Total Price");
 
+		// populate cell with data
 		Pid.setCellValueFactory(new PropertyValueFactory<>("productID"));
 		Pname.setCellValueFactory(new PropertyValueFactory<>("productName"));
 		Powner.setCellValueFactory(new PropertyValueFactory<>("owner"));
@@ -150,6 +150,7 @@ public class Interface extends Application {
 		PpricePerUnit.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		PtotalPrice.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 
+		// add columns to table
 		table.getColumns().add(Pid);
 		table.getColumns().add(Pname);
 		table.getColumns().add(Powner);
