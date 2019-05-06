@@ -22,6 +22,7 @@ public class Drug {
     private final IntegerProperty quantity;
     private final IntegerProperty pricePerUnit;
     private final IntegerProperty totalPrice;
+    private StringProperty ID;
 
     public Drug(Long productID, String productName, String owner, String previousOwner, Long quantity, Long pricePerUnit, Long totalPrice) {
         this.productID = new SimpleIntegerProperty(productID.intValue());
@@ -31,6 +32,10 @@ public class Drug {
         this.quantity = new SimpleIntegerProperty(quantity.intValue());
         this.pricePerUnit = new SimpleIntegerProperty(pricePerUnit.intValue());
         this.totalPrice = new SimpleIntegerProperty(totalPrice.intValue());
+    }
+    
+    public String getID() {
+    	return productID.get() + "";
     }
 
     public int getProductID() {
@@ -128,6 +133,17 @@ public class Drug {
                 ", pricePerUnit=" + pricePerUnit +
                 ", totalPrice=" + totalPrice +
                 '}';
+    }
+    public String report() {
+        return 
+                "productID=" + getProductID() +
+                "\nproductName=" + getProductName() +
+                "\nowner=" + getOwner() +
+                "\npreviousOwner=" + getPreviousOwner() +
+                "\nquantity=" + getQuantity() +
+                "\npricePerUnit=" + getPricePerUnit() +
+                "\ntotalPrice=" + getTotalPrice() ;
+               
     }
 }
 
