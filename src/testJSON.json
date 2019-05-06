@@ -15,7 +15,7 @@
 			"productName": "name1",
 			"owner": "ownername1",
 			"previousOwner": "prevownername1",
-			"quantity": 10,
+			"quantity": 50,
 			"pricePerUnit": 15,
 			"totalPrice": 100
 		},
@@ -24,7 +24,7 @@
 			"productName": "name2",
 			"owner": "ownername2",
 			"previousOwner": "prevownername2",
-			"quantity": 10,
+			"quantity": 100,
 			"pricePerUnit": 15,
 			"totalPrice": 100
 		}

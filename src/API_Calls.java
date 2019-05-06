@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -10,16 +7,22 @@ public class API_Calls{
     private static String qIdPost = ""; //queryID
     private static int bcId = 2; //blockchainID;
 
-    public static void main(String[] args) throws IOException {
-        POSTRequest();
-        GETRequest();
+    public static InputStream getInputStream(String url){
+
+        try {
+            POSTRequest(url);
+            return GETRequest(url);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static void POSTRequest() throws IOException {
+    private static void POSTRequest(String url) throws IOException {
         final String POST_PARAMS = "{\n" + "\"blockchainID\":" + bcId + "\r\n}";
         System.out.println(POST_PARAMS);
-        URL obj = new URL("https://blockchain-restful-api.herokuapp.com/api/query");
-        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        URL postRequestURL = new URL(url);
+        HttpURLConnection postConnection = (HttpURLConnection) postRequestURL.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("databaseID", "1");
         postConnection.setRequestProperty("Content-Type", "application/json");
@@ -48,30 +51,33 @@ public class API_Calls{
         System.out.println(response.toString());
     }
 
-    public static void GETRequest() throws IOException {
-        URL urlForGetRequest = new URL("https://blockchain-restful-api.herokuapp.com/api/query?queryID="+qIdPost);
+    private static InputStream GETRequest(String url) throws IOException {
+        URL urlForGetRequest = new URL(url+"?queryID="+qIdPost);
         String readLine = null;
-        HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
-        conection.setRequestMethod("GET");
-        conection.setRequestProperty("queryID", qIdPost);
-        int responseCode = conection.getResponseCode();
+        HttpURLConnection connection = (HttpURLConnection) urlForGetRequest.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("queryID", qIdPost);
+        int responseCode = connection.getResponseCode();
         System.out.println("\nGET response code: "+ responseCode);
-        System.out.println("GET Response Message : " + conection.getResponseMessage());
-        System.out.println("request property: " + conection.getURL().toString());
+        System.out.println("GET Response Message : " + connection.getResponseMessage());
+        System.out.println("request property: " + connection.getURL().toString());
 
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(conection.getInputStream()));
-            StringBuffer response = new StringBuffer();
-            while ((readLine = in .readLine()) != null) {
-                response.append(readLine);
-            } in .close();
-            // print result
-            System.out.println("JSON String Result: \n" + response.toString());
-            //GetAndPost.POSTRequest(response.toString());
-        } else {
+        if (responseCode != HttpURLConnection.HTTP_OK) {
             System.out.println("GET NOT WORKED");
+
+//            BufferedReader in = new BufferedReader(
+//                new InputStreamReader(conection.getInputStream()));
+//            StringBuffer response = new StringBuffer();
+//            while ((readLine = in .readLine()) != null) {
+//                response.append(readLine);
+//            } in .close();
+//            // print result
+//            System.out.println("JSON String Result: \n" + response.toString());
+//            //GetAndPost.POSTRequest(response.toString());
+            return null;
         }
+
+        return connection.getInputStream();
 
     }
 }
