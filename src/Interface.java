@@ -1,15 +1,19 @@
-//package firstgui;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -18,13 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class Interface extends Application {
-	private TableView<Drug> table;
+	int test = 0;
 	Scene scene1, scene2;
 
-	private ObservableList<Drug> data;
 
-	@Override
 	public void start(Stage primaryStage) {
+		ObservableList<Drug> data = FXCollections.observableArrayList();
+		TableView<Drug> table = new TableView<>();
 
 		primaryStage.setTitle("Drug Lookup");
 
@@ -52,66 +56,99 @@ public class Interface extends Application {
 			if (uField.getText().equals("student") && pField.getText().equals("password"))
 				primaryStage.setScene(scene2);
 			else
-				System.out.println("garbage");
+				System.out.println("Incorrect");
 		});
-		/**
-		 * Popup Stage popup = new Stage(); popup.initModality(Modality.NONE);
-		 * popup.setTitle("Product Information"); Label pLabel = new Label("This should
-		 * say information on the thing"); pLabel.setAlignment(Pos.CENTER); Scene scene1
-		 * = new Scene (pLabel,300,300);
-		 * 
-		 * popup.setScene(scene1); popup.show();
-		 */
+
 		// Scene 2
 
-		ObservableList<String> options = FXCollections.observableArrayList("Etherium", "Blockchain 2", "BlockChain 3",
-				"I honestly dont know what other blockchains are being used");
+		ObservableList<String> options = FXCollections.observableArrayList("Etherium", "Hyper Ledger", "Open Chain");
 
 		Button apply = new Button("apply");
-		Button Nlookup = new Button("New Lookup");
 
 		final ComboBox comboBox = new ComboBox(options);
 
-		HBox hbox = new HBox(20, comboBox, apply, Nlookup);
+		HBox hbox = new HBox(20, comboBox, apply);
 
-		Label sku = new Label("Product SKU:");
-		Label name = new Label("Product Name:");
-		Label supplier = new Label("Supplier:");
-		TextField skuField = new TextField();
-		TextField nameField = new TextField();
-		TextField supplyField = new TextField();
 
-		GridPane lookupGrid = new GridPane();
-		lookupGrid.setHgap(10);
-		lookupGrid.setVgap(10);
-		lookupGrid.add(sku, 0, 0);
-		lookupGrid.add(name, 0, 1);
-		lookupGrid.add(supplier, 0, 2);
-		lookupGrid.add(skuField, 1, 0);
-		lookupGrid.add(nameField, 1, 1);
-		lookupGrid.add(supplyField, 1, 2);
+		// Seach box code start
+		ChoiceBox<String> choiceBox = new ChoiceBox();
+		choiceBox.getItems().addAll("Product SKU", "Product Name", "Owner");
+		choiceBox.setValue("Product Name");
 
-		lookupGrid.setAlignment(Pos.TOP_CENTER);
+		TextField textField = new TextField();
+		textField.setPromptText("Search");
 
-		Button lookup = new Button("Lookup");
-		lookup.setOnAction(e -> {
-			System.out.println(skuField.getText() + " " + nameField.getText() + " " + supplyField.getText());
-			primaryStage.setScene(scene1);
-		});
 
 		try {
 			data = JSONparser.parse(new FileInputStream(new File("src/testJSON.json")));
-		} catch (FileNotFoundException e){
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		table = createTable();
+		table = createTable(data);
+		
+		try {
+			FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
 
-		VBox vbox2 = new VBox(10, hbox, lookupGrid, lookup, table);
+			table.setItems(flPerson);
+
+			textField.setOnKeyReleased(keyEvent -> {
+				switch (choiceBox.getValue())
+				{
+				case "Product Name":
+					flPerson.setPredicate(
+							p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+					break;
+				 case "Product SKU":
+					 
+							flPerson.setPredicate(
+						p ->  p.getID().contains(textField.getText().toLowerCase().trim()));
+				 break;
+				case "Owner":
+					flPerson.setPredicate(
+							p -> p.getOwner().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+					break;
+				}
+			});
+		} catch (Exception f) {
+			System.out.println("exception");
+		}
+		
+		//Search box code end
+
+		//Popup dialog start
+		Alert alert = new Alert(AlertType.INFORMATION);
+		try {
+			table.setRowFactory(tv -> {
+				TableRow<Drug> row = new TableRow<>();
+				row.setOnMouseClicked(event -> {
+					if (event.getClickCount() == 2 && (!row.isEmpty())) {
+						Drug rowData = row.getItem();
+						alert.setTitle("Drug Details");
+						alert.setHeaderText(rowData.getProductName());
+						alert.setContentText(rowData.report());
+						alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+						alert.showAndWait();
+					}
+				});
+				return row;
+			});
+		} catch (Exception E) {
+			System.out.println("hi");
+		}
+
+		//Popup Dialog end
+		
+		HBox hbox2 = new HBox(10, choiceBox, textField);
+		hbox.setAlignment(Pos.CENTER);
+		hbox2.setAlignment(Pos.CENTER);
+
+
+		VBox vbox2 = new VBox(10, hbox, hbox2, table);
+
 		vbox2.setPadding(new Insets(10));
 		vbox2.setAlignment(Pos.TOP_CENTER);
 
-		// layout2.getChildren().addAll(sku, lookup);
 		scene2 = new Scene(vbox2, 700, 700);
 
 		primaryStage.setScene(scene1);
@@ -122,7 +159,7 @@ public class Interface extends Application {
 		launch(args);
 	}
 
-	public TableView<Drug> createTable(){
+	public TableView<Drug> createTable(ObservableList data) {
 		TableView<Drug> table = new TableView();
 		table.setItems(data);
 
