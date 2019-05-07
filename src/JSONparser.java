@@ -38,12 +38,15 @@ public class JSONparser {
     private static Drug makeDrug(JSONObject data){
 
         return new Drug(
-                (Long) data.get("productID"),
+                (String) data.get("productID"),
                 (String) data.get("productName"),
+                (String) data.get("componentOf"),
                 (String) data.get("owner"),
                 (String) data.get("previousOwner"),
                 (Long) data.get("quantity"),
                 (Long) data.get("pricePerUnit"),
-                (Long) data.get("totalPrice"));
+                (Long) data.get("totalPrice"),
+                (String) data.get("transactionDate"),
+                (String) data.get("orderID"));
     }
 }

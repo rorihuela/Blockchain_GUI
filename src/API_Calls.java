@@ -5,11 +5,12 @@ import java.net.URL;
 
 public class API_Calls{
     private static String qIdPost = ""; //queryID
-    private static int bcId = 2; //blockchainID;
+    private static int bcId = 1; //blockchainID;
 
     public static InputStream getInputStream(String url){
 
         try {
+//            bcId = blockchainId;
             POSTRequest(url);
             return GETRequest(url);
         } catch (IOException e){
@@ -24,7 +25,7 @@ public class API_Calls{
         URL postRequestURL = new URL(url);
         HttpURLConnection postConnection = (HttpURLConnection) postRequestURL.openConnection();
         postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("databaseID", "1");
+        postConnection.setRequestProperty("databaseID", "0");
         postConnection.setRequestProperty("Content-Type", "application/json");
         postConnection.setDoOutput(true);
 

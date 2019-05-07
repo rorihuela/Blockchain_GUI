@@ -15,33 +15,42 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Drug {
-    private final IntegerProperty productID;
+    private final StringProperty productID;
     private final StringProperty productName;
+    private final StringProperty componentOf;
     private final StringProperty owner;
     private final StringProperty previousOwner;
     private final IntegerProperty quantity;
     private final IntegerProperty pricePerUnit;
     private final IntegerProperty totalPrice;
+    private final StringProperty transactionDate;
+    private final StringProperty orderID;
 
-    public Drug(Long productID, String productName, String owner, String previousOwner, Long quantity, Long pricePerUnit, Long totalPrice) {
-        this.productID = new SimpleIntegerProperty(productID.intValue());
+
+    public Drug(String productID, String productName, String componentOf,
+                String owner, String previousOwner, Long quantity, Long pricePerUnit,
+                Long totalPrice, String transactionDate, String orderID) {
+        this.productID = new SimpleStringProperty(productID);
         this.productName = new SimpleStringProperty(productName);
+        this.componentOf = new SimpleStringProperty(componentOf);
         this.owner = new SimpleStringProperty(owner);
         this.previousOwner = new SimpleStringProperty(previousOwner);
         this.quantity = new SimpleIntegerProperty(quantity.intValue());
         this.pricePerUnit = new SimpleIntegerProperty(pricePerUnit.intValue());
         this.totalPrice = new SimpleIntegerProperty(totalPrice.intValue());
+        this.transactionDate = new SimpleStringProperty(transactionDate);
+        this.orderID = new SimpleStringProperty(orderID);
     }
 
-    public int getProductID() {
+    public String getProductID() {
         return productID.get();
     }
 
-    public IntegerProperty productIDProperty() {
+    public StringProperty productIDProperty() {
         return productID;
     }
 
-    public void setProductID(int productID) {
+    public void setProductID(String productID) {
         this.productID.set(productID);
     }
 
@@ -55,6 +64,18 @@ public class Drug {
 
     public void setProductName(String productName) {
         this.productName.set(productName);
+    }
+
+    public String getComponentOf() {
+        return componentOf.get();
+    }
+
+    public StringProperty componentOfProperty() {
+        return componentOf;
+    }
+
+    public void setComponentOf(String componentOf) {
+        this.componentOf.set(componentOf);
     }
 
     public String getOwner() {
@@ -117,16 +138,43 @@ public class Drug {
         this.totalPrice.set(totalPrice);
     }
 
+    public String getTransactionDate() {
+        return transactionDate.get();
+    }
+
+    public StringProperty transactionDateProperty() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate.set(transactionDate);
+    }
+
+    public String getOrderID() {
+        return orderID.get();
+    }
+
+    public StringProperty orderIDProperty() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID.set(orderID);
+    }
+
     @Override
     public String toString() {
         return "Drug{" +
                 "productID=" + productID +
                 ", productName=" + productName +
+                ", componentOf=" + componentOf +
                 ", owner=" + owner +
                 ", previousOwner=" + previousOwner +
                 ", quantity=" + quantity +
                 ", pricePerUnit=" + pricePerUnit +
                 ", totalPrice=" + totalPrice +
+                ", transactionDate=" + transactionDate +
+                ", orderID=" + orderID +
                 '}';
     }
 }

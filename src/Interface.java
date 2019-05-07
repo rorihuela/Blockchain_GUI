@@ -20,6 +20,7 @@ public class Interface extends Application {
 	Scene scene1, scene2;
 
 	private ObservableList<Drug> data;
+	private String apiURL = "https://blockchain-restful-api.herokuapp.com/api/query";
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -62,11 +63,11 @@ public class Interface extends Application {
 		 */
 		// Scene 2
 
-		ObservableList<String> options = FXCollections.observableArrayList("Etherium", "Blockchain 2", "BlockChain 3",
-				"I honestly dont know what other blockchains are being used");
+		ObservableList<String> options = FXCollections.observableArrayList("Etherium", "Hyper Ledger", "Open Chain");
 
 		Button apply = new Button("apply");
 		apply.setOnAction(e ->{
+//			displayData();
 			table.setItems(data); // add data to the table
 		});
 
@@ -101,7 +102,7 @@ public class Interface extends Application {
 			primaryStage.setScene(scene1);
 		});
 
-		data = JSONparser.parse(new BufferedInputStream(API_Calls.getInputStream("https://blockchain-restful-api.herokuapp.com/api/query")));
+		data = JSONparser.parse(new BufferedInputStream(API_Calls.getInputStream(apiURL)));
 		table = createTable();
 
 		VBox vbox2 = new VBox(10, hbox, lookupGrid, lookup, table);
@@ -127,38 +128,54 @@ public class Interface extends Application {
 		// create and link columns to Drug fields
 		TableColumn<Drug, String> Pid = new TableColumn<>("Product ID");
 		TableColumn<Drug, String> Pname = new TableColumn<>("Product Name");
+		TableColumn<Drug, String> PcomponentOf = new TableColumn<>("Component Of");
 		TableColumn<Drug, String> Powner = new TableColumn<>("Owner");
 		TableColumn<Drug, String> PprevOwner = new TableColumn<>("Previous Owner");
 		TableColumn<Drug, String> Pquantity = new TableColumn<>("Quantity");
 		TableColumn<Drug, String> PpricePerUnit = new TableColumn<>("Price Per Unit");
 		TableColumn<Drug, String> PtotalPrice = new TableColumn<>("Total Price");
+		TableColumn<Drug, String> PtransactionDate = new TableColumn<>("Transaction Date");
+		TableColumn<Drug, String> PorderID = new TableColumn<>("Order ID");
 
 		// populate cell with data
 		Pid.setCellValueFactory(new PropertyValueFactory<>("productID"));
 		Pname.setCellValueFactory(new PropertyValueFactory<>("productName"));
+		PcomponentOf.setCellValueFactory(new PropertyValueFactory<>("componentOf"));
 		Powner.setCellValueFactory(new PropertyValueFactory<>("owner"));
 		PprevOwner.setCellValueFactory(new PropertyValueFactory<>("previousOwner"));
 		Pquantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 		PpricePerUnit.setCellValueFactory(new PropertyValueFactory<>("pricePerUnit"));
 		PtotalPrice.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
+		PtransactionDate.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
+		PorderID.setCellValueFactory(new PropertyValueFactory<>("orderID"));
 
 		Pid.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		Pname.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		PcomponentOf.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		Powner.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		PprevOwner.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		Pquantity.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		PpricePerUnit.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 		PtotalPrice.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		PtransactionDate.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+		PorderID.prefWidthProperty().bind(table.widthProperty().multiply(.2));
 
 		// add columns to table
 		table.getColumns().add(Pid);
 		table.getColumns().add(Pname);
+		table.getColumns().add(PcomponentOf);
 		table.getColumns().add(Powner);
 		table.getColumns().add(PprevOwner);
 		table.getColumns().add(Pquantity);
 		table.getColumns().add(PpricePerUnit);
 		table.getColumns().add(PtotalPrice);
+		table.getColumns().add(PtransactionDate);
+		table.getColumns().add(PorderID);
 
 		return table;
+	}
+
+	public void displayData(){
+
 	}
 }
