@@ -5,7 +5,7 @@ import java.net.URL;
 
 public class API_Calls{
     private static String qIdPost = ""; //queryID
-    private static int bcId = 1; //blockchainID;
+    private static int bcId = 2; //blockchainID;
 
     public static InputStream getInputStream(String url){
 
@@ -25,12 +25,13 @@ public class API_Calls{
         URL postRequestURL = new URL(url);
         HttpURLConnection postConnection = (HttpURLConnection) postRequestURL.openConnection();
         postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("databaseID", "0");
-        postConnection.setRequestProperty("Content-Type", "application/json");
+        postConnection.setRequestProperty("databaseID", "2");
+//        postConnection.setRequestProperty("Content-Type", "application/json");
         postConnection.setDoOutput(true);
 
         OutputStream os = postConnection.getOutputStream();
         os.write(POST_PARAMS.getBytes());
+        System.out.println(os.toString());
         os.flush();
         os.close();
         int responseCode = postConnection.getResponseCode();
@@ -66,15 +67,15 @@ public class API_Calls{
         if (responseCode != HttpURLConnection.HTTP_OK) {
             System.out.println("GET NOT WORKED");
 
-//            BufferedReader in = new BufferedReader(
-//                new InputStreamReader(conection.getInputStream()));
-//            StringBuffer response = new StringBuffer();
-//            while ((readLine = in .readLine()) != null) {
-//                response.append(readLine);
-//            } in .close();
-//            // print result
-//            System.out.println("JSON String Result: \n" + response.toString());
-//            //GetAndPost.POSTRequest(response.toString());
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(connection.getInputStream()));
+            StringBuffer response = new StringBuffer();
+            while ((readLine = in .readLine()) != null) {
+                response.append(readLine);
+            } in .close();
+            // print result
+            System.out.println("JSON String Result: \n" + response.toString());
+//            GetAndPost.POSTRequest(response.toString());
             return null;
         }
 

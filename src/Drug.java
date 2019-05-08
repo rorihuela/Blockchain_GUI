@@ -1,13 +1,3 @@
-//{
-//        "productID": 0,
-//        "productName": "name0",
-//        "owner": "ownername0",
-//        "previousOwner": "prevownername0",
-//        "quantity": 10,
-//        "pricePerUnit": 15,
-//        "totalPrice": 100
-//        }
-
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,12 +7,12 @@ import javafx.beans.property.StringProperty;
 public class Drug {
     private final StringProperty productID;
     private final StringProperty productName;
-    private final StringProperty componentOf;
     private final StringProperty owner;
     private final StringProperty previousOwner;
     private final IntegerProperty quantity;
     private final IntegerProperty pricePerUnit;
     private final IntegerProperty totalPrice;
+    private final StringProperty componentOf;
     private final StringProperty transactionDate;
     private final StringProperty orderID;
 
@@ -40,6 +30,9 @@ public class Drug {
         this.totalPrice = new SimpleIntegerProperty(totalPrice.intValue());
         this.transactionDate = new SimpleStringProperty(transactionDate);
         this.orderID = new SimpleStringProperty(orderID);
+    }
+    public String getID() {
+        return productID.get() + "";
     }
 
     public String getProductID() {
@@ -177,5 +170,18 @@ public class Drug {
                 ", orderID=" + orderID +
                 '}';
     }
-}
+    public String report() {
+        return
+                "productID = " + getProductID() +
+                        "\ncomponentOf = " + getComponentOf() +
+                        "\nproductName = " + getProductName() +
+                        "\nowner = " + getOwner() +
+                        "\npreviousOwner = " + getPreviousOwner() +
+                        "\nquantity = " + getQuantity() +
+                        "\npricePerUnit = " + getPricePerUnit() +
+                        "\ntotalPrice = " + getTotalPrice() +
+                        "\ntransactionDate = " + getTransactionDate() +
+                        "\norderID = " + getOrderID();
 
+    }
+}
