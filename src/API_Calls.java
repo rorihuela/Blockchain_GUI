@@ -7,10 +7,10 @@ public class API_Calls{
     private static String qIdPost = ""; //queryID
     private static int bcId = 2; //blockchainID;
 
-    public static InputStream getInputStream(String url){
-
+    public static InputStream getInputStream(String url, int blockchainID){
+        bcId = blockchainID;
+        
         try {
-//            bcId = blockchainId;
             POSTRequest(url);
             return GETRequest(url);
         } catch (IOException e){
@@ -25,7 +25,7 @@ public class API_Calls{
         URL postRequestURL = new URL(url);
         HttpURLConnection postConnection = (HttpURLConnection) postRequestURL.openConnection();
         postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("databaseID", "2");
+        postConnection.setRequestProperty("databaseID", Integer.toString(bcId));
 //        postConnection.setRequestProperty("Content-Type", "application/json");
         postConnection.setDoOutput(true);
 
