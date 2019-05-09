@@ -266,8 +266,6 @@ public class Interface extends Application {
 		} catch (Exception f) {
 			System.out.println("exception");
 		}
-
 		//Search box code end
-
 	}
 }
