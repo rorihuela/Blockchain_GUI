@@ -1,3 +1,4 @@
+package src;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,12 +34,17 @@ public class Interface extends Application {
 			new File("src/testEtherium.json"),
 			new File("src/testHyperLedger.json"),
 			new File("src/testOpenChain.json")};
-	ChoiceBox<String> choiceBox;
-	TextField textField;
+
+	FilteredList<Drug> flPerson;
+	//FilteredList<Drug> flEth;
+	//FilteredList<Drug> flEth;
 
 
 	public void start(Stage primaryStage) {
 
+
+		table.prefHeightProperty().bind(primaryStage.heightProperty());
+		//table.prefHeightProperty().bind(scene1.heightProperty());
 
 		primaryStage.setTitle("Drug Lookup");
 
@@ -99,14 +106,49 @@ public class Interface extends Application {
 
 
 		// Seach box code start
-		choiceBox = new ChoiceBox();
+		ChoiceBox<String> choiceBox = new ChoiceBox();
 		choiceBox.getItems().addAll("Product ID", "Product Name", "Owner");
 		choiceBox.setValue("Product Name");
 
-		textField = new TextField();
+		TextField textField = new TextField();
 		textField.setPromptText("Search");
 
 		table = createTable();
+		
+		//table.prefHeight(1000);
+
+		//FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
+
+		try {
+		//flPerson.setPredicate(data, p ->true);
+			//FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
+
+			table.setItems(flPerson);
+
+			textField.setOnKeyReleased(keyEvent -> {
+				switch (choiceBox.getValue())
+				{
+					case "Product Name":
+						System.out.println(flPerson);
+						flPerson.setPredicate(
+								p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+						break;
+					case "Product ID":
+
+						flPerson.setPredicate(
+								p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+						break;
+					case "Owner":
+						flPerson.setPredicate(
+								p -> p.getOwner().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+						break;
+				}
+			});
+		} catch (Exception f) {
+			System.out.println("exception");
+		}
+
+		//Search box code end
 
 		//Popup dialog start
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -137,7 +179,8 @@ public class Interface extends Application {
 
 
 		VBox vbox2 = new VBox(10, hbox, hbox2, table);
-
+		
+		vbox2.setVgrow(table, Priority.ALWAYS);
 		vbox2.setPadding(new Insets(10));
 		vbox2.setAlignment(Pos.TOP_CENTER);
 
@@ -235,39 +278,15 @@ public class Interface extends Application {
 		}
 
 		table.setItems(data);
-		createFilteredList();
+		flPerson = makeList(data);
+		
+		
+		//flPerson.setPredicate(data);
 		return true;
 	}
-
-	public void createFilteredList(){
-		try {
-			FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
-
-			table.setItems(flPerson);
-
-			textField.setOnKeyReleased(keyEvent -> {
-				switch (choiceBox.getValue())
-				{
-					case "Product Name":
-						flPerson.setPredicate(
-								p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
-						break;
-					case "Product ID":
-
-						flPerson.setPredicate(
-								p -> p.getProductID().toLowerCase().contains(textField.getText().toLowerCase().trim()));
-						break;
-					case "Owner":
-						flPerson.setPredicate(
-								p -> p.getOwner().toLowerCase().contains(textField.getText().toLowerCase().trim()));
-						break;
-				}
-			});
-		} catch (Exception f) {
-			System.out.println("exception");
-		}
-
-		//Search box code end
-
+	public FilteredList<Drug> makeList(ObservableList<Drug> data) {
+		FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
+		return flPerson;
+		//return null;
 	}
 }
