@@ -9,7 +9,7 @@ public class API_Calls{
 
     public static InputStream getInputStream(String url, int blockchainID){
         bcId = blockchainID;
-        
+
         try {
             POSTRequest(url);
             return GETRequest(url);

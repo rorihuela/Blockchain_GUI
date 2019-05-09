@@ -30,6 +30,8 @@ public class Interface extends Application {
 			new File("src/testEtherium.json"),
 			new File("src/testHyperLedger.json"),
 			new File("src/testOpenChain.json")};
+	ChoiceBox<String> choiceBox;
+	TextField textField;
 
 
 	public void start(Stage primaryStage) {
@@ -79,43 +81,14 @@ public class Interface extends Application {
 
 
 		// Seach box code start
-		ChoiceBox<String> choiceBox = new ChoiceBox();
-		choiceBox.getItems().addAll("Product SKU", "Product Name", "Owner");
+		choiceBox = new ChoiceBox();
+		choiceBox.getItems().addAll("Product ID", "Product Name", "Owner");
 		choiceBox.setValue("Product Name");
 
-		TextField textField = new TextField();
+		textField = new TextField();
 		textField.setPromptText("Search");
 
 		table = createTable();
-
-		try {
-			FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
-
-			table.setItems(flPerson);
-
-			textField.setOnKeyReleased(keyEvent -> {
-				switch (choiceBox.getValue())
-				{
-					case "Product Name":
-						flPerson.setPredicate(
-								p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
-						break;
-					case "Product SKU":
-
-						flPerson.setPredicate(
-								p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
-						break;
-					case "Owner":
-						flPerson.setPredicate(
-								p -> p.getOwner().toLowerCase().contains(textField.getText().toLowerCase().trim()));
-						break;
-				}
-			});
-		} catch (Exception f) {
-			System.out.println("exception");
-		}
-
-		//Search box code end
 
 		//Popup dialog start
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -244,6 +217,39 @@ public class Interface extends Application {
 		}
 
 		table.setItems(data);
+		createFilteredList();
 		return true;
+	}
+
+	public void createFilteredList(){
+		try {
+			FilteredList<Drug> flPerson = new FilteredList(data, p -> true);
+
+			table.setItems(flPerson);
+
+			textField.setOnKeyReleased(keyEvent -> {
+				switch (choiceBox.getValue())
+				{
+					case "Product Name":
+						flPerson.setPredicate(
+								p -> p.getProductName().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+						break;
+					case "Product ID":
+
+						flPerson.setPredicate(
+								p -> p.getProductID().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+						break;
+					case "Owner":
+						flPerson.setPredicate(
+								p -> p.getOwner().toLowerCase().contains(textField.getText().toLowerCase().trim()));
+						break;
+				}
+			});
+		} catch (Exception f) {
+			System.out.println("exception");
+		}
+
+		//Search box code end
+
 	}
 }
