@@ -1,4 +1,3 @@
-package src;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -25,6 +24,7 @@ public class Interface extends Application {
 	int test = 0;
 	Scene scene1, scene2;
 	ComboBox comboBox;
+	
 	private String apiURL = "https://blockchain-restful-api.herokuapp.com/api/query";
 	ObservableList<Drug> data = FXCollections.observableArrayList();
 	TableView<Drug> table = new TableView<>();
@@ -91,6 +91,7 @@ public class Interface extends Application {
 		});
 
 		comboBox = new ComboBox(options);
+		comboBox.setPromptText("Select a Blockchain");
 
 		HBox hbox = new HBox(20, comboBox, apply);
 
