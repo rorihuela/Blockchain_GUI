@@ -5,7 +5,7 @@ import java.net.URL;
 
 public class API_Calls{
     private static String qIdPost = ""; //queryID
-    private static int bcId = 2; //blockchainID;
+    private static int bcId; //blockchainID;
 
     public static InputStream getInputStream(String url, int blockchainID){
         bcId = blockchainID;

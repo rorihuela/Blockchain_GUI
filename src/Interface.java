@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 
 public class Interface extends Application {
@@ -229,8 +228,9 @@ public class Interface extends Application {
 		}
 
 		try {
+//			data = JSONparser.parse(API_Calls.getInputStream(apiURL, selection)); // Used when API is active and running properly
 			data = JSONparser.parse(new FileInputStream(testFiles[selection]));
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
